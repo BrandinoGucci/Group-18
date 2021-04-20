@@ -1,0 +1,60 @@
+Feature: List Events
+
+  Scenario: Someone looks for events
+    When the user clicks "events"
+    Then the app lists events
+
+
+Feature: Create an Event
+
+  Scenario: user creates event
+    When the user creates an event
+    Then the app saves the event details
+
+Feature: RSVP to an Event
+
+  Scenario: User RSVP's to an event
+    When the user clicks "RSVP"
+    Then the app saves their RSVP
+
+Feature: Delete an event
+
+  Scenario: User wants to delete an event
+    When the user clicks "delete event"
+    Then the app deletes their event
+
+Feature: Register a user
+
+  Scenario: User wants to make an account
+    When the user clicks "register account" and inputs information
+    Then the app created their account
+
+Feature: User sign-in
+
+  Scenario: User wants to sign-in
+    When the user clicks "sign-in" and inputs information
+    Then the app verifies and signs in the user
+
+Feature: Rating 
+
+  Scenario: User wants to rate an event
+    When the user clicks a rating
+    Then the app updates the ratings
+
+Feature: Searching 
+
+  Scenario: User wants to search for an event
+    When the user searches
+    Then the app shows search results
+
+Feature: Filtering 
+
+  Scenario: User wants to filter events
+    When the user clicks "filter"
+    Then the app updates the events list
+
+Feature: Adding a recommended event
+
+  Scenario: User wants to view reccomended events
+    When the user clicks "events" or views a specific event
+    Then the app shows recommended events
