@@ -92,7 +92,7 @@ def register():
         return redirect(url_for('get_events'))
 
     # something went wrong - display register view
-    return render_template('login/signup.html', form=form)
+    return render_template('SignUpLogin.html', form=form)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -113,10 +113,10 @@ def login():
         # password check failed
         # set error message to alert user
         login_form.password.errors = ["Incorrect username or password."]
-        return render_template("login/signup.html", form=login_form)
+        return render_template("SignUpLogin.html", form=login_form)
     else:
         # form did not validate or GET request
-        return render_template("login/signup.html", form=login_form)
+        return render_template("SignUpLogin.html", form=login_form)
 
 
 
