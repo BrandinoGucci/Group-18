@@ -1,5 +1,4 @@
 from database import db
-from sqlalchemy_utils import aggregated
 
 class User(db.Model):
     id = db.Column("userId", db.Integer, primary_key = True)
