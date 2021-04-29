@@ -23,35 +23,88 @@ with app.app_context():
 
 @app.route('/')
 @app.route('/home')
-def home()
-
-
+def home():
+    def index():
+        if session.get('user'):
+            return render_template('index.html', user=session['user'])
+        return render_template("index.html")
 
 
 @app.route('/events')
 def events()
+    if session.get('user'):
 
+        my_notes = db.session.query(Note).filter_by(user_id=session['user_id']).all()
+
+        return render_template("notes.html", notes=my_notes, user=session["user"])
+    else:
+        return redirect(url_for("login"))
 
 
 
 
 @app.route('/events/<note_id>')
 def get_events(note_id)
+    if session.get('user'):
 
+        my_note = db.session.query(Note).filter_by(id=note_id).one()
+
+        form = CommentForm()
+
+        return render_template("note.html", note=my_note, user=session['user'], form=form)
+    else:
+        return redirect(url_for('login'))
 
 
 
 @app.route('/events/new', methods=['GET', 'POST'])
-def new_event()
+def new_event
 
+        if session.get('user'):
+            if request.method == 'POST':
+                title = request.form['title']
+                text = request.form['noteText']
+                from datetime import date
+                today = date.today()
+                today = today.strftime("%m-%d-%Y")
+                new_record = Note(title, text, today, session.get('user_id'))
+                db.session.add(new_record)
+                db.session.commit()
+                return redirect(url_for('get_notes'))
+            else:
+
+                return render_template('new.html', user=session['user'])
+        else:
+            return redirect(url_for('login'))
 
 
 @app.route('/events/edit/<note_id>', methods=['GET', 'POST'])
-def update_event()
+def update_event(note_id):
 
+        if session.get('user'):
+            if request.method == "POST":
 
+                title = request.form['title']
+                text = request.form['noteText']
+                note = db.session.query(Note).filter_by(id=note_id).one()
+                note.title = title
+                note.text = text
+                db.session.add(note)
+                db.session.commit()
+
+                return redirect(url_for('get_notes'))
+            else:
+                a_user = db.session.query(User).filter_by(email='bpokhar2@uncc.edu').one()
+
+                my_note = db.session.query(Note).filter_by(id=note_id).one()
+
+                return render_template('new.html', note=my_note, user=session['user'])
+        else:
+            return redirect(url_for('login'))
+
+""" Idk what to do rn
 @app.route('/events/rsvp')
-def rsvp_event()
+def rsvp_event()"""
 
 
 @app.route('/events/delete/<note_id>', methods=['POST'])
