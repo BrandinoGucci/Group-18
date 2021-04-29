@@ -1,4 +1,5 @@
 from database import db
+from sqlalchemy_utils import aggregated
 
 class User(db.Model):
     id = db.Column("userId", db.Integer, primary_key = True)
@@ -8,6 +9,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     rsvp = db.relationship("Attendance", backref="user", lazy = True)
     event = db.relationship("Event", backref="user", lazy = True)
+    ratings = db.relationship("Ratings", backref="user", lazy = True)
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
@@ -22,6 +24,7 @@ class Event(db.Model):
     date = db.Column("date", db.String(50))
     event_location = db.Column("event_location", db.String(100))
     rsvp = db.relationship("Attendance", backref="event", lazy = True)
+    ratings = db.relationship("Ratings", backref="event", cascade="all, delete-orphan", lazy = True)
 
     def __init__(self, event_name, event_info, date, event_location,):
         self.event_name = event_name
@@ -30,14 +33,23 @@ class Event(db.Model):
         self.event_location = event_location
 
 
-# May not need to implement based on how flask handles this stuff?
-# But rating is an extra feature so we'll figure that out later
-# class Ratings(db.Model):
+
+class Ratings(db.Model):
+    id = db.Column("id", db.Integer, primary_key = True)
+    rating = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
+    event_id = db.Column(db.Integer, db.ForeignKey("event.id"), nullable = False)
+
+    def __init__(self, rating, user_id, event_id):
+        self.rating = rating
+        self.user_id = user_id
+        self.event_id = event_id
+
 
 
 class Attendance(db.Model):
-    rsvp = db.Column("rsvp", db.Boolean, primary_key = True)
-    id = db.Column("id", db.Integer)
+    id = db.Column("id", db.Integer, primary_key = True)
+    rsvp = db.Column("rsvp", db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
     event_id = db.Column(db.Integer, db.ForeignKey("event.id"), nullable = False)
 
@@ -45,6 +57,3 @@ class Attendance(db.Model):
         self.rsvp = rsvp
         self.user_id = user_id
         self.event_id = event_id
-
-
-    
